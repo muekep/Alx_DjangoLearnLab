@@ -80,7 +80,7 @@ def query_all_books_by_specific_author(author_name="Jane Austen"):
     """
     print(f"\n--- Query: All books by {author_name} ---")
     try:
-        author = Author.objects.get(author=author)
+        author = Author.objects.get(name=author_name)
         books = author.books.all() # Using the 'related_name' defined in Book model
 
         if books.exists():
