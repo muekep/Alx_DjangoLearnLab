@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy # Used for redirecting to named URLs
 from django.contrib.auth.decorators import login_required # Optional: for protecting views
-
+from django.contrib.auth import login
 from .models import Book, Library # Your existing imports
 
 # --- Existing Views (from previous step) ---
