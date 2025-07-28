@@ -31,3 +31,25 @@ urlpatterns = [
     # Optional: A protected view to test login_required
     # path('protected/', views.protected_view, name='protected_view'),
 ]
+# relationship_app/urls.py
+
+from django.urls import path
+from . import views
+
+app_name = 'relationship_app'
+
+urlpatterns = [
+    # Existing views
+    path('books/', views.book_list, name='book_list'),
+    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
+
+    # Authentication Views
+    path('register/', views.register, name='register'),
+    path('login/', views.CustomLoginView.as_view(), name='login'),
+    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
+
+    # New Role-Based Views
+    path('admin-dashboard/', views.admin_view, name='admin_dashboard'),
+    path('librarian-dashboard/', views.librarian_view, name='librarian_dashboard'),
+    path('member-dashboard/', views.member_view, name='member_dashboard'),
+]
