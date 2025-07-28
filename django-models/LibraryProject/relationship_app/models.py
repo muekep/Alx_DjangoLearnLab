@@ -5,6 +5,16 @@ from django.contrib.auth.models import User # Import Django's built-in User mode
 from django.db.models.signals import post_save # For signals
 from django.dispatch import receiver # For signals
 
+# relationship_app/models.py
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+# Existing models (Author, Library, Librarian, UserProfile) remain the same
+# ... (your existing Author, Library, Librarian, UserProfile models here) ...
+
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
@@ -18,7 +28,16 @@ class Book(models.Model):
         on_delete=models.CASCADE,
         related_name='books'
     )
-    publication_year = models.IntegerField(null=True, blank=True) # Ensure this field exists for templates
+    publication_year = models.IntegerField(null=True, blank=True)
+
+    class Meta: # --- ADD THIS META CLASS ---
+        permissions = [
+            ("can_add_book", "Can add a new book"),
+            ("can_change_book", "Can change existing book"),
+            ("can_delete_book", "Can delete a book"),
+        ]
+        # Optional: You might also want to order books by title by default
+        # ordering = ['title']
 
     def __str__(self):
         return f"{self.title} by {self.author.name}"
@@ -44,10 +63,7 @@ class Librarian(models.Model):
     def __str__(self):
         return f"{self.name} ({self.library.name} Librarian)"
 
-
-# --- New UserProfile Model ---
 class UserProfile(models.Model):
-    # Define roles as constants for clarity and reusability
     ROLE_ADMIN = 'Admin'
     ROLE_LIBRARIAN = 'Librarian'
     ROLE_MEMBER = 'Member'
@@ -64,10 +80,8 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile ({self.role})"
 
-# --- Signal to create UserProfile automatically ---
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
-    # If the user already exists and is being saved (e.g., in admin), ensure profile exists
     instance.profile.save()
