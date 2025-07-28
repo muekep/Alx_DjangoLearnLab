@@ -1,0 +1,15 @@
+<!-- librarian_view.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librarian Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, Librarian!</h1>
+    <p>This content is only visible to users with the 'Librarian' role.</p>
+    <p><a href="{% url 'relationship_app:logout' %}">Logout</a></p>
+    <p><a href="{% url 'relationship_app:book_list' %}">View Books</a></p>
+</body>
+</html>
