@@ -1,26 +1,51 @@
-from django.shortcuts import render, get_object_or_404
-from django.views.generic.detail import DetailView
-from .models import Library, Book # Import your models
+# relationship_app/views.py
 
-# --- Function-based View ---
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import reverse_lazy # Used for redirecting to named URLs
+from django.contrib.auth.decorators import login_required # Optional: for protecting views
+
+from .models import Book, Library # Your existing imports
+
+# --- Existing Views (from previous step) ---
 def book_list(request):
-    """
-    Lists all books stored in the database.
-    """
-    books = Book.objects.all().order_by('title') # Get all books, ordered by title
+    books = Book.objects.all().order_by('title')
     context = {
         'books': books
     }
     return render(request, 'relationship_app/list_books.html', context)
 
-# --- Class-based View ---
+from django.views.generic import DetailView
 class LibraryDetailView(DetailView):
-    """
-    Displays details for a specific library, listing all books available in that library.
-    """
-    model = Library # Specifies the model this view will operate on
-    template_name = 'relationship_app/library_detail.html' # Path to your template
-    context_object_name = 'library' # The name of the variable to use in the template
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
 
-# Create your views here.
-"""  """
+# --- New Authentication Views ---
+
+# Custom Registration View (Function-based)
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login') # Redirect to login page after successful registration
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
+
+# Login View (Class-based, using Django's built-in)
+class CustomLoginView(LoginView):
+    template_name = 'relationship_app/login.html'
+    # success_url is handled by LOGIN_REDIRECT_URL in settings.py
+
+# Logout View (Class-based, using Django's built-in)
+class CustomLogoutView(LogoutView):
+    template_name = 'relationship_app/logout.html'
+    # next_page is handled by LOGOUT_REDIRECT_URL in settings.py
+
+# Optional: Example of a protected view
+@login_required
+def protected_view(request):
+    return render(request, 'relationship_app/protected.html') # You'd need to create this template
