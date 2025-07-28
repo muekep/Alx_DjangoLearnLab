@@ -16,6 +16,9 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
 ]
 urlpatterns = [
+    path('logout/', LogoutView.as_view(), name='logout'),
+]
+urlpatterns = [
     # Existing views
     path('books/', views.book_list, name='book_list'),
     path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
