@@ -12,7 +12,9 @@ from . import views # Import your views
 # from django.contrib.auth import views as auth_views # Alternative if you don't wrap them in CustomLoginView/CustomLogoutView
 
 app_name = 'relationship_app' # Namespace for URLs, good practice
-
+urlpatterns = [
+    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+]
 urlpatterns = [
     # Existing views
     path('books/', views.book_list, name='book_list'),
