@@ -1,7 +1,7 @@
 # relationship_app/urls.py
 
 from django.urls import path
-from . import views # Import your views
+from .views import list_book # Import your views
 
 app_name = 'relationship_app' # Namespace for URLs, good practice
 
